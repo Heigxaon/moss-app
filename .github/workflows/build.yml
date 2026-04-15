@@ -37,12 +37,25 @@ jobs:
             cmake \
             libffi-dev \
             libssl-dev \
-            libltdl-dev
+            libltdl-dev \
+            wget
 
       - name: 安装 Buildozer
         run: |
           pip install --upgrade pip
           pip install buildozer cython
+
+      - name: 手动安装 Android SDK Command-line Tools
+        run: |
+          mkdir -p /home/runner/.buildozer/android/platform/android-sdk
+          cd /home/runner/.buildozer/android/platform/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          mkdir -p cmdline-tools
+          mv cmdline-tools latest
+          mkdir -p cmdline-tools
+          mv latest cmdline-tools/
+          rm commandlinetools-linux-11076708_latest.zip
 
       - name: 接受 Android SDK 许可证
         run: |
