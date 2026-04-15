@@ -44,6 +44,13 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
+      - name: 接受 Android SDK 许可证
+        run: |
+          mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+
       - name: 设置内存优化环境变量
         run: |
           echo "P4A_NUM_JOBS=1" >> $GITHUB_ENV
