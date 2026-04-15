@@ -1,0 +1,79 @@
+#:kivy 2.0
+#:import ScrollableLabel scrollablelabel.ScrollableLabel
+
+<ChatBubble@BoxLayout>:
+    side: 'left'
+    text: ''
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: max(label.height + dp(16), dp(40))
+    BoxLayout:
+        size_hint_x: 0.2 if root.side == 'left' else 0.8
+    Label:
+        id: label
+        text: root.text
+        markup: True
+        text_size: self.width - dp(20), None
+        size_hint_x: 0.8
+        size_hint_y: None
+        height: self.texture_size[1] + dp(16)
+        halign: 'left' if root.side == 'left' else 'right'
+        valign: 'middle'
+        color: 0,0,0,1
+        canvas.before:
+            Color:
+                rgba: (0.9,0.9,0.9,1) if root.side == 'left' else (0.2,0.6,1,1)
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(10)]
+        padding: dp(10), dp(8)
+
+MossScreen:
+    BoxLayout:
+        orientation: 'vertical'
+        # 顶部工具栏
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            padding: dp(5)
+            Label:
+                text: f"MOSS - {app.config.get('模型', '')}"
+                bold: True
+                color: 0.2,0.6,1,1
+            Button:
+                text: "设置"
+                size_hint_x: None
+                width: dp(80)
+                on_release: app.open_settings()
+        # 聊天记录区域
+        ScrollView:
+            id: chat_scroll
+            do_scroll_x: False
+            bar_width: dp(4)
+            RecycleView:
+                id: chat_list
+                viewclass: 'ChatBubble'
+                data: []
+                RecycleBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    default_size_hint: 1, None
+                    default_size: 0, dp(40)
+        # 底部输入区域
+        BoxLayout:
+            size_hint_y: None
+            height: dp(60)
+            padding: dp(5)
+            spacing: dp(5)
+            TextInput:
+                id: input_msg
+                hint_text: "输入消息..."
+                multiline: False
+                on_text_validate: app.send_message()
+            Button:
+                text: "发送"
+                size_hint_x: None
+                width: dp(80)
+                on_release: app.send_message()
